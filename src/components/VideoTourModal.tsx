@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { TelemetryOverlay } from "./TelemetryOverlay";
+import { SpatialTestFit } from "./SpatialTestFit";
 import type { Workspace } from "@/data/workspaces";
 import { Play, Pause, X } from "lucide-react";
 
@@ -104,6 +105,10 @@ export function VideoTourModal({
             <div className="mt-1 text-base font-medium">{workspace.quietZonePct}% acoustic compliance</div>
             <div className="text-xs text-white/60">Booths, pods & focus floors mapped</div>
           </div>
+        </div>
+
+        <div className="px-6 pb-6">
+          <SpatialTestFit workspace={workspace} />
         </div>
       </DialogContent>
     </Dialog>
