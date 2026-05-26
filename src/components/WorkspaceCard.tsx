@@ -100,6 +100,11 @@ export function WorkspaceCard({
           <span className={`rounded-md px-2 py-0.5 ${fits ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}>
             {fits ? `Fits your ${requiredSeats}-seat need` : `Under-sized vs ${requiredSeats} seats`}
           </span>
+          {getWorkspaceTypes(workspace).map((t) => (
+            <span key={t} className="inline-flex items-center gap-1 rounded-md border border-primary/20 bg-primary/5 px-2 py-0.5 text-[10px] font-medium text-primary">
+              <Layers className="h-2.5 w-2.5" /> {t}
+            </span>
+          ))}
         </div>
 
         <div className="mt-4">
