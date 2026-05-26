@@ -1,7 +1,8 @@
 import * as React from "react";
-import type { Workspace } from "@/data/workspaces";
+import type { Workspace, WorkspaceType } from "@/data/workspaces";
+import { getWorkspaceTypes } from "@/data/workspaces";
 import { PriceEstimator } from "./PriceEstimator";
-import { Play, Wifi, Volume2, MapPin, Zap, Clock, CheckCircle2 } from "lucide-react";
+import { Play, Wifi, Volume2, MapPin, Zap, Clock, CheckCircle2, Layers } from "lucide-react";
 
 export function WorkspaceCard({
   workspace,
