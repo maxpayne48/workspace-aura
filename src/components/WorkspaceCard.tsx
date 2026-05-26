@@ -15,12 +15,32 @@ export function WorkspaceCard({
   onCheckLive: (w: Workspace) => void;
 }) {
   const fits = workspace.seatCapacity >= requiredSeats;
+  // Availability now reacts to the Hybrid Optimizer's required seat count.
+  const utilization = requiredSeats / workspace.seatCapacity;
+  const dynamicStatus: "available" | "limited" | "full" =
+    requiredSeats > workspace.seatCapacity
+      ? "full"
+      : utilization > 0.8
+      ? "limited"
+      : "available";
   const statusChip =
-    workspace.status === "available"
-      ? { label: "Available Now", className: "bg-emerald-500/15 text-emerald-700 border-emerald-500/30", Icon: CheckCircle2 }
-      : workspace.status === "limited"
-      ? { label: "High Demand", className: "bg-amber-500/15 text-amber-700 border-amber-500/30", Icon: Zap }
-      : { label: "Reserved", className: "bg-rose-500/15 text-rose-700 border-rose-500/30", Icon: Clock };
+    dynamicStatus === "available"
+      ? {
+          label: `Available · ${workspace.seatCapacity - requiredSeats} seats free`,
+          className: "bg-emerald-500/15 text-emerald-700 border-emerald-500/30",
+          Icon: CheckCircle2,
+        }
+      : dynamicStatus === "limited"
+        ? {
+            label: `Limited · only ${workspace.seatCapacity - requiredSeats} left`,
+            className: "bg-amber-500/15 text-amber-700 border-amber-500/30",
+            Icon: Zap,
+          }
+        : {
+            label: `Over capacity · short by ${requiredSeats - workspace.seatCapacity}`,
+            className: "bg-rose-500/15 text-rose-700 border-rose-500/30",
+            Icon: Clock,
+          };
   const Sc = statusChip.Icon;
 
   return (
