@@ -6,6 +6,23 @@ export type City =
   | "Pune"
   | "Chennai";
 
+export type WorkspaceType =
+  | "Serviced Offices"
+  | "Coworking Spaces"
+  | "Virtual Offices"
+  | "Meeting Rooms"
+  | "Training Rooms"
+  | "Day Office";
+
+export const WORKSPACE_TYPES: WorkspaceType[] = [
+  "Serviced Offices",
+  "Coworking Spaces",
+  "Virtual Offices",
+  "Meeting Rooms",
+  "Training Rooms",
+  "Day Office",
+];
+
 export type Workspace = {
   id: string;
   operator: string;
@@ -26,6 +43,7 @@ export type Workspace = {
   flash: "High Demand" | "Available Now" | "Reserved";
   capacityType: "boutique" | "standard" | "enterprise";
   seatCapacity: number;
+  workspaceTypes?: WorkspaceType[];
 };
 
 // Real, verified marquee operators across Indian metros.
@@ -376,3 +394,15 @@ export const WORKSPACES: Workspace[] = [
 ];
 
 export const CITIES: City[] = ["Mumbai", "Delhi-NCR", "Bangalore", "Hyderabad", "Pune", "Chennai"];
+
+// Derive a sensible default set of workspace product types from operator scale & tags.
+export function getWorkspaceTypes(w: Workspace): WorkspaceType[] {
+  if (w.workspaceTypes && w.workspaceTypes.length) return w.workspaceTypes;
+  const types: WorkspaceType[] = ["Coworking Spaces"];
+  if (w.capacityType === "enterprise") types.push("Serviced Offices");
+  if (w.tags.includes("meeting-rooms")) types.push("Meeting Rooms");
+  if (w.seatCapacity >= 400) types.push("Training Rooms");
+  if (w.tags.includes("hot-desk") || w.capacityType === "boutique") types.push("Day Office");
+  types.push("Virtual Offices");
+  return Array.from(new Set(types));
+}

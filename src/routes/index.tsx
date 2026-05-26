@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { WORKSPACES, CITIES, type City, type Workspace } from "@/data/workspaces";
+import { WORKSPACES, CITIES, WORKSPACE_TYPES, getWorkspaceTypes, type City, type Workspace, type WorkspaceType } from "@/data/workspaces";
 import { WorkspaceCard } from "@/components/WorkspaceCard";
 import { VideoTourModal } from "@/components/VideoTourModal";
 import { LiveAvailability } from "@/components/LiveAvailability";
@@ -13,6 +13,7 @@ export const Route = createFileRoute("/")({ component: Index });
 function Index() {
   const [city, setCity] = React.useState<City | "All">("All");
   const [query, setQuery] = React.useState("");
+  const [wsType, setWsType] = React.useState<WorkspaceType | "All">("All");
   const [hybrid, setHybrid] = React.useState<HybridState>(() => {
     const c = computeRequiredSeats(120, 3);
     return { employees: 120, daysPerWeek: 3, ...c };
@@ -24,6 +25,7 @@ function Index() {
   const filtered = React.useMemo(() => {
     return WORKSPACES.filter((w) => {
       if (city !== "All" && w.city !== city) return false;
+      if (wsType !== "All" && !getWorkspaceTypes(w).includes(wsType)) return false;
       if (query) {
         const q = query.toLowerCase();
         if (!`${w.operator} ${w.location} ${w.micromarket} ${w.city}`.toLowerCase().includes(q)) return false;
@@ -38,7 +40,7 @@ function Index() {
       }
       return true;
     });
-  }, [city, query, nova]);
+  }, [city, query, nova, wsType]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -97,6 +99,45 @@ function Index() {
                   {c}
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Workspace product types */}
+          <div className="mt-5">
+            <div className="text-[11px] uppercase tracking-widest text-muted-foreground">Browse by workspace type</div>
+            <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-7">
+              <button
+                onClick={() => setWsType("All")}
+                className={`rounded-xl border bg-card px-3 py-3 text-xs font-medium transition hover:bg-muted ${
+                  wsType === "All" ? "border-primary/60 ring-2 ring-primary/30" : ""
+                }`}
+              >
+                <div className="text-lg">✦</div>
+                <div className="mt-1">All Types</div>
+              </button>
+              {WORKSPACE_TYPES.map((t) => {
+                const count = WORKSPACES.filter((w) => getWorkspaceTypes(w).includes(t)).length;
+                const active = wsType === t;
+                const icon =
+                  t === "Serviced Offices" ? "🏢" :
+                  t === "Coworking Spaces" ? "🤝" :
+                  t === "Virtual Offices" ? "💻" :
+                  t === "Meeting Rooms" ? "🎥" :
+                  t === "Training Rooms" ? "📊" : "🛋️";
+                return (
+                  <button
+                    key={t}
+                    onClick={() => setWsType(active ? "All" : t)}
+                    className={`group relative rounded-xl border bg-card px-3 py-3 text-left text-xs font-medium transition hover:bg-muted ${
+                      active ? "border-primary/60 ring-2 ring-primary/30" : ""
+                    }`}
+                  >
+                    <div className="text-lg leading-none">{icon}</div>
+                    <div className="mt-1 leading-tight">{t}</div>
+                    <div className="text-[10px] font-normal text-muted-foreground">{count} live</div>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
