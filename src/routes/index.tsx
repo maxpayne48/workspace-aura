@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { WORKSPACES, CITIES, type City, type Workspace } from "@/data/workspaces";
+import { WORKSPACES, CITIES, WORKSPACE_TYPES, getWorkspaceTypes, type City, type Workspace, type WorkspaceType } from "@/data/workspaces";
 import { WorkspaceCard } from "@/components/WorkspaceCard";
 import { VideoTourModal } from "@/components/VideoTourModal";
 import { LiveAvailability } from "@/components/LiveAvailability";
@@ -13,6 +13,7 @@ export const Route = createFileRoute("/")({ component: Index });
 function Index() {
   const [city, setCity] = React.useState<City | "All">("All");
   const [query, setQuery] = React.useState("");
+  const [wsType, setWsType] = React.useState<WorkspaceType | "All">("All");
   const [hybrid, setHybrid] = React.useState<HybridState>(() => {
     const c = computeRequiredSeats(120, 3);
     return { employees: 120, daysPerWeek: 3, ...c };
@@ -24,6 +25,7 @@ function Index() {
   const filtered = React.useMemo(() => {
     return WORKSPACES.filter((w) => {
       if (city !== "All" && w.city !== city) return false;
+      if (wsType !== "All" && !getWorkspaceTypes(w).includes(wsType)) return false;
       if (query) {
         const q = query.toLowerCase();
         if (!`${w.operator} ${w.location} ${w.micromarket} ${w.city}`.toLowerCase().includes(q)) return false;
@@ -38,7 +40,7 @@ function Index() {
       }
       return true;
     });
-  }, [city, query, nova]);
+  }, [city, query, nova, wsType]);
 
   return (
     <div className="min-h-screen bg-background">
