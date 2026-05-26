@@ -101,6 +101,45 @@ function Index() {
               ))}
             </div>
           </div>
+
+          {/* Workspace product types */}
+          <div className="mt-5">
+            <div className="text-[11px] uppercase tracking-widest text-muted-foreground">Browse by workspace type</div>
+            <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-7">
+              <button
+                onClick={() => setWsType("All")}
+                className={`rounded-xl border bg-card px-3 py-3 text-xs font-medium transition hover:bg-muted ${
+                  wsType === "All" ? "border-primary/60 ring-2 ring-primary/30" : ""
+                }`}
+              >
+                <div className="text-lg">✦</div>
+                <div className="mt-1">All Types</div>
+              </button>
+              {WORKSPACE_TYPES.map((t) => {
+                const count = WORKSPACES.filter((w) => getWorkspaceTypes(w).includes(t)).length;
+                const active = wsType === t;
+                const icon =
+                  t === "Serviced Offices" ? "🏢" :
+                  t === "Coworking Spaces" ? "🤝" :
+                  t === "Virtual Offices" ? "💻" :
+                  t === "Meeting Rooms" ? "🎥" :
+                  t === "Training Rooms" ? "📊" : "🛋️";
+                return (
+                  <button
+                    key={t}
+                    onClick={() => setWsType(active ? "All" : t)}
+                    className={`group relative rounded-xl border bg-card px-3 py-3 text-left text-xs font-medium transition hover:bg-muted ${
+                      active ? "border-primary/60 ring-2 ring-primary/30" : ""
+                    }`}
+                  >
+                    <div className="text-lg leading-none">{icon}</div>
+                    <div className="mt-1 leading-tight">{t}</div>
+                    <div className="text-[10px] font-normal text-muted-foreground">{count} live</div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </section>
 
