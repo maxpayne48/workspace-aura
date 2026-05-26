@@ -2,6 +2,7 @@ import * as React from "react";
 import type { Workspace, WorkspaceType } from "@/data/workspaces";
 import { getWorkspaceTypes } from "@/data/workspaces";
 import { PriceEstimator } from "./PriceEstimator";
+import { EsgLedger } from "./EsgLedger";
 import { Play, Wifi, Volume2, MapPin, Zap, Clock, CheckCircle2, Layers } from "lucide-react";
 
 export function WorkspaceCard({
@@ -54,6 +55,9 @@ export function WorkspaceCard({
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-transparent" />
+
+        {/* Sustainability & Efficiency Ledger — hover overlay */}
+        <EsgLedger workspace={workspace} />
 
         <div className="absolute left-3 top-3 flex items-center gap-2">
           <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium backdrop-blur ${statusChip.className}`}>
