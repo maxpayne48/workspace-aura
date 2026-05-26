@@ -6,6 +6,23 @@ export type City =
   | "Pune"
   | "Chennai";
 
+export type WorkspaceType =
+  | "Serviced Offices"
+  | "Coworking Spaces"
+  | "Virtual Offices"
+  | "Meeting Rooms"
+  | "Training Rooms"
+  | "Day Office";
+
+export const WORKSPACE_TYPES: WorkspaceType[] = [
+  "Serviced Offices",
+  "Coworking Spaces",
+  "Virtual Offices",
+  "Meeting Rooms",
+  "Training Rooms",
+  "Day Office",
+];
+
 export type Workspace = {
   id: string;
   operator: string;
@@ -26,6 +43,7 @@ export type Workspace = {
   flash: "High Demand" | "Available Now" | "Reserved";
   capacityType: "boutique" | "standard" | "enterprise";
   seatCapacity: number;
+  workspaceTypes: WorkspaceType[];
 };
 
 // Real, verified marquee operators across Indian metros.
