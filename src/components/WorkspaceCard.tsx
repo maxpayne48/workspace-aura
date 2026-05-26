@@ -1,7 +1,8 @@
 import * as React from "react";
-import type { Workspace } from "@/data/workspaces";
+import type { Workspace, WorkspaceType } from "@/data/workspaces";
+import { getWorkspaceTypes } from "@/data/workspaces";
 import { PriceEstimator } from "./PriceEstimator";
-import { Play, Wifi, Volume2, MapPin, Zap, Clock, CheckCircle2 } from "lucide-react";
+import { Play, Wifi, Volume2, MapPin, Zap, Clock, CheckCircle2, Layers } from "lucide-react";
 
 export function WorkspaceCard({
   workspace,
@@ -99,6 +100,11 @@ export function WorkspaceCard({
           <span className={`rounded-md px-2 py-0.5 ${fits ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}>
             {fits ? `Fits your ${requiredSeats}-seat need` : `Under-sized vs ${requiredSeats} seats`}
           </span>
+          {getWorkspaceTypes(workspace).map((t) => (
+            <span key={t} className="inline-flex items-center gap-1 rounded-md border border-primary/20 bg-primary/5 px-2 py-0.5 text-[10px] font-medium text-primary">
+              <Layers className="h-2.5 w-2.5" /> {t}
+            </span>
+          ))}
         </div>
 
         <div className="mt-4">
