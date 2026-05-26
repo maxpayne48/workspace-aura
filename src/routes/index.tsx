@@ -6,6 +6,7 @@ import { VideoTourModal } from "@/components/VideoTourModal";
 import { LiveAvailability } from "@/components/LiveAvailability";
 import { HybridOptimizer, computeRequiredSeats, type HybridState } from "@/components/HybridOptimizer";
 import { NovaAdvisor, type NovaFilters } from "@/components/NovaAdvisor";
+import { CommuteOptimizer, type CommuteCluster } from "@/components/CommuteOptimizer";
 import { Search, Building2 } from "lucide-react";
 
 export const Route = createFileRoute("/")({ component: Index });
@@ -19,11 +20,13 @@ function Index() {
     return { employees: 120, daysPerWeek: 3, ...c };
   });
   const [nova, setNova] = React.useState<NovaFilters | null>(null);
+  const [cluster, setCluster] = React.useState<CommuteCluster>(null);
   const [videoFor, setVideoFor] = React.useState<Workspace | null>(null);
   const [liveFor, setLiveFor] = React.useState<Workspace | null>(null);
 
   const filtered = React.useMemo(() => {
     return WORKSPACES.filter((w) => {
+      if (cluster && !cluster.ids.includes(w.id)) return false;
       if (city !== "All" && w.city !== city) return false;
       if (wsType !== "All" && !getWorkspaceTypes(w).includes(wsType)) return false;
       if (query) {
@@ -40,7 +43,7 @@ function Index() {
       }
       return true;
     });
-  }, [city, query, nova, wsType]);
+  }, [city, query, nova, wsType, cluster]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -146,6 +149,10 @@ function Index() {
       <main className="mx-auto max-w-7xl px-6 py-10">
         <div id="optimizer">
           <HybridOptimizer state={hybrid} onChange={setHybrid} />
+        </div>
+
+        <div className="mt-6">
+          <CommuteOptimizer cluster={cluster} onChange={setCluster} />
         </div>
 
         {nova && (
