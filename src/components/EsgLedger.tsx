@@ -22,39 +22,39 @@ export function getEsgProfile(w: Workspace) {
 export function EsgLedger({ workspace }: { workspace: Workspace }) {
   const e = getEsgProfile(workspace);
   return (
-    <div className="pointer-events-none absolute inset-0 z-10 flex items-end opacity-0 transition-all duration-300 group-hover:opacity-100">
-      <div className="m-3 w-full rounded-xl border border-emerald-500/20 bg-background/95 p-3 shadow-xl backdrop-blur-xl">
+    <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex translate-y-2 items-end opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+      <div className="mx-3 mb-3 w-full rounded-xl border border-emerald-500/20 bg-black/60 p-3 shadow-xl backdrop-blur-md">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="grid h-7 w-7 place-items-center rounded-lg bg-emerald-500/15 text-emerald-600">
+            <div className="grid h-7 w-7 place-items-center rounded-lg bg-emerald-500/15 text-emerald-300">
               <Leaf className="h-3.5 w-3.5" />
             </div>
             <div>
-              <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Sustainability & Efficiency Ledger</div>
-              <div className="text-xs font-semibold">{e.cert}</div>
+              <div className="text-[10px] uppercase tracking-widest text-white/70">Sustainability & Efficiency Ledger</div>
+              <div className="text-xs font-semibold text-white">{e.cert}</div>
             </div>
           </div>
-          <div className="flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">
+          <div className="flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-300">
             <Award className="h-3 w-3" /> ESG {e.grade} · {e.score}/100
           </div>
         </div>
         <div className="mt-2 grid grid-cols-3 gap-1.5 text-[10px]">
-          <div className="rounded-md bg-muted/60 p-1.5">
-            <div className="flex items-center gap-1 text-muted-foreground"><Zap className="h-3 w-3" /> Energy</div>
-            <div className="font-semibold tabular-nums">{Math.round(70 + e.score / 5)} kWh/seat·yr</div>
+          <div className="rounded-md bg-white/10 p-1.5">
+            <div className="flex items-center gap-1 text-white/60"><Zap className="h-3 w-3" /> Energy</div>
+            <div className="font-semibold tabular-nums text-white">{Math.round(70 + e.score / 5)} kWh/seat·yr</div>
           </div>
-          <div className="rounded-md bg-muted/60 p-1.5">
-            <div className="flex items-center gap-1 text-muted-foreground"><Droplets className="h-3 w-3" /> Water</div>
-            <div className="font-semibold tabular-nums">{Math.round(8 + e.score / 20)} L/seat·d</div>
+          <div className="rounded-md bg-white/10 p-1.5">
+            <div className="flex items-center gap-1 text-white/60"><Droplets className="h-3 w-3" /> Water</div>
+            <div className="font-semibold tabular-nums text-white">{Math.round(8 + e.score / 20)} L/seat·d</div>
           </div>
-          <div className="rounded-md bg-muted/60 p-1.5">
-            <div className="flex items-center gap-1 text-muted-foreground"><Wind className="h-3 w-3" /> Air</div>
-            <div className="font-semibold tabular-nums">PM2.5 &lt; {12 + (workspace.quietZonePct % 5)}</div>
+          <div className="rounded-md bg-white/10 p-1.5">
+            <div className="flex items-center gap-1 text-white/60"><Wind className="h-3 w-3" /> Air</div>
+            <div className="font-semibold tabular-nums text-white">PM2.5 &lt; {12 + (workspace.quietZonePct % 5)}</div>
           </div>
         </div>
-        <p className="mt-2 text-[11px] leading-snug text-foreground/80">
+        <p className="mt-2 text-[11px] leading-snug text-white/80">
           Choosing this biophilic-optimized location reduces your team's indirect operational carbon footprint by{" "}
-          <b className="text-emerald-700">{e.reduction}%</b> compared to local commercial baselines.
+          <b className="text-emerald-300">{e.reduction}%</b> compared to local commercial baselines.
         </p>
       </div>
     </div>
