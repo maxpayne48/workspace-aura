@@ -7,7 +7,8 @@ import { LiveAvailability } from "@/components/LiveAvailability";
 import { HybridOptimizer, computeRequiredSeats, type HybridState } from "@/components/HybridOptimizer";
 import { NovaAdvisor, type NovaFilters } from "@/components/NovaAdvisor";
 import { CommuteOptimizer, type CommuteCluster } from "@/components/CommuteOptimizer";
-import { Search, Building2 } from "lucide-react";
+import { CompareModal } from "@/components/CompareModal";
+import { Search, Building2, GitCompare, X } from "lucide-react";
 
 export const Route = createFileRoute("/")({ component: Index });
 
@@ -23,6 +24,21 @@ function Index() {
   const [cluster, setCluster] = React.useState<CommuteCluster>(null);
   const [videoFor, setVideoFor] = React.useState<Workspace | null>(null);
   const [liveFor, setLiveFor] = React.useState<Workspace | null>(null);
+  const [compareIds, setCompareIds] = React.useState<string[]>([]);
+  const [compareOpen, setCompareOpen] = React.useState(false);
+
+  const MAX_COMPARE = 4;
+  const toggleCompare = React.useCallback((w: Workspace) => {
+    setCompareIds((prev) => {
+      if (prev.includes(w.id)) return prev.filter((x) => x !== w.id);
+      if (prev.length >= MAX_COMPARE) return prev;
+      return [...prev, w.id];
+    });
+  }, []);
+  const compareWorkspaces = React.useMemo(
+    () => compareIds.map((id) => WORKSPACES.find((w) => w.id === id)!).filter(Boolean),
+    [compareIds]
+  );
 
   const filtered = React.useMemo(() => {
     return WORKSPACES.filter((w) => {
@@ -177,6 +193,8 @@ function Index() {
               requiredSeats={hybrid.requiredSeats}
               onPlay={setVideoFor}
               onCheckLive={setLiveFor}
+              selectedForCompare={compareIds.includes(w.id)}
+              onToggleCompare={toggleCompare}
             />
           ))}
           {filtered.length === 0 && (
@@ -210,6 +228,48 @@ function Index() {
       <VideoTourModal workspace={videoFor} open={!!videoFor} onOpenChange={(v) => !v && setVideoFor(null)} />
       <LiveAvailability workspace={liveFor} open={!!liveFor} onOpenChange={(v) => !v && setLiveFor(null)} />
       <NovaAdvisor onApply={setNova} active={nova} />
+      <CompareModal
+        workspaces={compareWorkspaces}
+        open={compareOpen}
+        onOpenChange={setCompareOpen}
+        onRemove={(id) => setCompareIds((p) => p.filter((x) => x !== id))}
+        requiredSeats={hybrid.requiredSeats}
+      />
+
+      {/* Floating compare tray */}
+      {compareIds.length > 0 && (
+        <div className="fixed bottom-4 left-1/2 z-40 w-[min(680px,calc(100%-2rem))] -translate-x-1/2">
+          <div className="flex items-center gap-3 rounded-2xl border bg-card/95 p-2 pl-4 shadow-2xl backdrop-blur-xl">
+            <GitCompare className="h-4 w-4 text-primary" />
+            <div className="text-xs">
+              <b>{compareIds.length}</b> / {MAX_COMPARE} selected for comparison
+            </div>
+            <div className="hidden flex-1 items-center gap-1.5 overflow-x-auto sm:flex">
+              {compareWorkspaces.map((w) => (
+                <span key={w.id} className="inline-flex items-center gap-1 whitespace-nowrap rounded-full border bg-background px-2 py-0.5 text-[11px]">
+                  {w.operator}
+                  <button onClick={() => setCompareIds((p) => p.filter((x) => x !== w.id))} className="text-muted-foreground hover:text-foreground">
+                    <X className="h-3 w-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+            <button
+              onClick={() => setCompareIds([])}
+              className="rounded-lg px-2 py-1.5 text-xs text-muted-foreground hover:bg-muted"
+            >
+              Clear
+            </button>
+            <button
+              onClick={() => setCompareOpen(true)}
+              disabled={compareIds.length < 2}
+              className="rounded-lg px-3 py-1.5 text-xs font-medium text-white btn-glow disabled:opacity-50"
+            >
+              Compare {compareIds.length >= 2 ? "now" : "(pick 2+)"}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
