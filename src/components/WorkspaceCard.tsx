@@ -10,11 +10,15 @@ export function WorkspaceCard({
   requiredSeats,
   onPlay,
   onCheckLive,
+  selectedForCompare,
+  onToggleCompare,
 }: {
   workspace: Workspace;
   requiredSeats: number;
   onPlay: (w: Workspace) => void;
   onCheckLive: (w: Workspace) => void;
+  selectedForCompare?: boolean;
+  onToggleCompare?: (w: Workspace) => void;
 }) {
   const fits = workspace.seatCapacity >= requiredSeats;
   // Availability now reacts to the Hybrid Optimizer's required seat count.
@@ -72,6 +76,24 @@ export function WorkspaceCard({
         >
           <Play className="h-3.5 w-3.5 fill-current" /> Play Tour
         </button>
+
+        {onToggleCompare && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleCompare(workspace);
+            }}
+            className={`absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium backdrop-blur transition ${
+              selectedForCompare
+                ? "border-primary bg-primary text-primary-foreground shadow-lg"
+                : "border-white/30 bg-black/40 text-white hover:bg-black/60"
+            }`}
+            aria-pressed={!!selectedForCompare}
+          >
+            <CheckCircle2 className="h-3 w-3" />
+            {selectedForCompare ? "Added to compare" : "Compare"}
+          </button>
+        )}
 
         {/* glassmorphic hover overlay */}
         <div className="pointer-events-none absolute inset-x-3 bottom-3 translate-y-3 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
