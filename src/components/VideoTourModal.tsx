@@ -38,7 +38,7 @@ export function VideoTourModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl border-0 bg-[oklch(0.14_0.02_264)] p-0 text-white sm:rounded-2xl">
+      <DialogContent className="max-h-[90vh] max-w-5xl overflow-y-auto border-0 bg-[oklch(0.14_0.02_264)] p-0 text-white sm:rounded-2xl">
         <div className="relative aspect-video w-full overflow-hidden rounded-t-2xl bg-black">
           <video
             ref={videoRef}
